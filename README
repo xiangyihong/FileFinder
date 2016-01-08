@@ -1,0 +1,7 @@
+Toy project.
+
+This tool should be used to find:
+1. file name with given name (TODO);
+2. file name with given regex expression (TODO);
+3. file name with same MD5 value (TODO);
+4. file name satisfying given properties(like size) (TODO);
