@@ -1,27 +1,28 @@
-
 def find_file_name(dir, file_name, depth = 0)
   return nil unless Dir.exist? dir
-
-  old_dir = Dir.pwd
-  Dir.chdir dir
 
   # depth = 0: only search current directory
   # depth < 0: search recursively
   # depth > 0: search till depth level subdirectory
   depth = depth <= 0 ? depth : depth - 1
-  
+
   result = []
+
+  old_dir = Dir.pwd
+  Dir.chdir dir
+
   begin
-    Dir.foreach dir do |entry|
+    Dir.foreach "." do |entry|
       if depth != 0 and Dir.exist? entry
-        result << find_file_name(entry, file_name, depth)
+        next if [".", ".."].include? entry
+        find_file_name(entry, file_name, depth).each do |x|
+          result << File.join(dir, x)
+        end
         next
       end
-    
-      if File.basename(entry)[file_name]
-        result << entry
+      if entry[file_name]
+        result << File.join(dir, entry)
       end
-
     end
   ensure
     Dir.chdir old_dir
@@ -35,5 +36,5 @@ if ARGV.length < 1
 end
 
 filename = ARGV[0]
-puts find_file_name("./", filename)
+puts find_file_name("./", filename, -1)
 
